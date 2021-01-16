@@ -1,7 +1,16 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import { actions } from '../../store';
 import { Table } from '../countries';
+
+const FlexContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+`;
 
 const HomePage: React.FC = () => {
   const dispatch = useDispatch();
@@ -11,9 +20,11 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <React.Fragment>
+    <FlexContainer>
+      <h2>List of countries</h2>
       <Table />
-    </React.Fragment>
+      <h5>Created by 황동욱, inhibitor [inhibitor@kaist.ac.kr]</h5>
+    </FlexContainer>
   );
 };
 
