@@ -21,6 +21,7 @@ const LOAD_INVOKE = 'countries/load.invoke' as const;
 const LOAD_SUCCESS = 'countries/load.success' as const;
 const LOAD_ERROR = 'countries/load.error' as const;
 const ORDER_BY = 'countries/order_by' as const;
+const SET_KEYWORD = 'countries/set_keyword' as const;
 
 const load = () => ({ type: LOAD_INVOKE });
 const loadSuccess = (countries: Country[]) => ({
@@ -34,12 +35,19 @@ const orderBy = (
   type: ORDER_BY,
   value,
 });
+const setKeyword = (
+  value: string
+): { type: 'countries/set_keyword'; value: string } => ({
+  type: SET_KEYWORD,
+  value,
+});
 
 type CountriesActions =
   | ReturnType<typeof load>
   | ReturnType<typeof loadSuccess>
   | ReturnType<typeof loadError>
-  | ReturnType<typeof orderBy>;
+  | ReturnType<typeof orderBy>
+  | ReturnType<typeof setKeyword>;
 
 const loadThunk = (): ThunkAction<
   Promise<void>,
@@ -69,17 +77,20 @@ type CountriesState = {
   list?: { id: string; country: Country }[];
   orderBy: CountriesOrderBy;
   order: CountriesOrder;
+  keyword: string;
 };
 
 const initialState: CountriesState = {
   pending: false,
   orderBy: CountriesOrderBy.code,
   order: CountriesOrder.ascending,
+  keyword: '',
 };
 
 export const actions = {
   load: loadThunk,
   orderBy,
+  setKeyword,
 };
 
 export const reducer = (
@@ -115,6 +126,10 @@ export const reducer = (
           draft.orderBy = action.value;
           draft.order = CountriesOrder.ascending;
         }
+      });
+    case SET_KEYWORD:
+      return produce(state, (draft) => {
+        draft.keyword = action.value;
       });
     default:
       return state;

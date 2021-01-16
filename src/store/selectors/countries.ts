@@ -1,6 +1,31 @@
 import { createSelector } from 'reselect';
+import { countryContainsKeyword } from '../../utils';
 import { RootState } from '../modules';
 import { CountriesOrder, CountriesOrderBy } from '../modules/countries';
+
+type CountryItem = {
+  id: string;
+  country: Country;
+};
+
+const filteredCountries = createSelector<
+  RootState,
+  CountryItem[] | undefined,
+  string,
+  CountryItem[] | undefined
+>(
+  (state) => state.countries.list,
+  (state) => state.countries.keyword,
+  (list, keyword) => {
+    if (!list) {
+      return list;
+    }
+
+    return list.filter(({ country }) =>
+      countryContainsKeyword(country, keyword)
+    );
+  }
+);
 
 const compareArray = (
   one: string[],
@@ -46,12 +71,12 @@ const countriesComparator = (orderBy: CountriesOrderBy) => (
 
 export const sortedCountries = createSelector<
   RootState,
-  { id: string; country: Country }[] | undefined,
+  CountryItem[] | undefined,
   CountriesOrderBy,
   CountriesOrder,
-  { id: string; country: Country }[] | undefined
+  CountryItem[] | undefined
 >(
-  (state) => state.countries.list,
+  filteredCountries,
   (state) => state.countries.orderBy,
   (state) => state.countries.order,
   (list, orderBy, order) => {

@@ -1,1 +1,6 @@
-export { isValidCountry, isValidCountryList } from './country';
+export {
+  countryContainsKeyword,
+  countryStartsWithKeyword,
+  isValidCountry,
+  isValidCountryList,
+} from './country';
