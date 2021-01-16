@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { reducer as reduxFormReducer } from 'redux-form';
 
 import {
   actions as countriesAction,
@@ -11,6 +12,7 @@ export const actions = {
 
 const rootReducer = combineReducers({
   countries: countriesReducer,
+  form: reduxFormReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
