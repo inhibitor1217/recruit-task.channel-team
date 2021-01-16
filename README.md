@@ -9,3 +9,12 @@
 ```
 $ yarn start
 ```
+
+- Build project
+
+```
+$ yarn build
+
+# then, serve the built content
+$ npx serve -s build/
+```
