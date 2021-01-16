@@ -9,6 +9,7 @@ interface AddCountryFormProps {
   handleSubmit: SubmitHandler;
   submitting: boolean;
   pristine: boolean;
+  invalid: boolean;
   reset(): void;
 }
 
@@ -37,6 +38,7 @@ const renderField = ({
 const AddCountryForm: React.FC<AddCountryFormProps> = ({
   handleSubmit,
   pristine,
+  invalid,
   reset: resetForm,
   submitting,
 }) => {
@@ -61,7 +63,7 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
         label="국가 전화번호"
         component={renderField}
       />
-      <button type="submit" disabled={submitting}>
+      <button type="submit" disabled={invalid || submitting}>
         Submit
       </button>
       <button
@@ -78,15 +80,26 @@ const AddCountryForm: React.FC<AddCountryFormProps> = ({
   );
 };
 
+const callingCodesRegex = /^([0-9, ]+)$/i;
+
 export default reduxForm({
   form: ADD_COUNTRY_FORM_KEY,
+  validate: (values: Record<string, string>) => {
+    return {
+      code: values.code ? undefined : '국가 코드를 입력하세요.',
+      name: values.name ? undefined : '이름을 입력하세요.',
+      callingCodes: callingCodesRegex.test(values.callingCodes)
+        ? undefined
+        : '올바른 형태의 국가 전화번호를 입력하세요.',
+    };
+  },
   onSubmit: (values: Record<string, string>, dispatch) => {
     const candidate: AnyJson = {
       name: values.name,
       alpha2Code: values.code,
-      capital: values.capital,
-      region: values.region,
-      callingCodes: values.callingCodes.replace(' ', '').split(','),
+      capital: values.capital ?? '',
+      region: values.region ?? '',
+      callingCodes: (values.callingCodes ?? '').replace(' ', '').split(','),
     };
     if (!isValidCountry(candidate)) {
       throw Error(`invalid country: ${JSON.stringify(candidate)}`);
