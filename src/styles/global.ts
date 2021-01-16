@@ -99,7 +99,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   /* Material Icons */
-  .material-icon {
+  .material-icons {
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
@@ -130,11 +130,11 @@ const GlobalStyle = createGlobalStyle`
   .material-icons.md-32 { font-size: 32px; }
   .material-icons.md-48 { font-size: 48px; }
   /* Rules for using icons as black on a light background. */
-  .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-  .material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+  .material-icons.md-dark { color: #212121; }
+  .material-icons.md-dark.md-inactive { color: #888888; }
   /* Rules for using icons as white on a dark background. */
-  .material-icons.md-light { color: rgba(255, 255, 255, 1); }
-  .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+  .material-icons.md-light { color: #ffffff; }
+  .material-icons.md-light.md-inactive { color: #c0c0c0; }
   
   .hidden {
     display: none !important;

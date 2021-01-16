@@ -1,11 +1,37 @@
+import classnames from 'classnames';
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import { actions } from '../../store';
 
 interface TableRowProps {
   id: string;
   country: Country;
 }
+
+const StyledTd = styled.td`
+  max-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+
+  span {
+    text-overflow: ellipsis;
+  }
+
+  button {
+    background-color: transparent;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    margin: 0;
+    border: none;
+    outline: none;
+  }
+
+  button:hover {
+    cursor: pointer;
+  }
+`;
 
 const TableRow: React.FC<TableRowProps> = ({ id, country }) => {
   const dispatch = useDispatch();
@@ -14,14 +40,28 @@ const TableRow: React.FC<TableRowProps> = ({ id, country }) => {
 
   return (
     <tr>
-      <td>{country.alpha2Code}</td>
-      <td>{country.name}</td>
-      <td>{country.capital}</td>
-      <td>{country.region}</td>
-      <td>{country.callingCodes.join(', ')}</td>
-      <td>
-        <button onClick={onRemove}>Remove</button>
-      </td>
+      <StyledTd className="has-text">
+        <span>{country.alpha2Code}</span>
+      </StyledTd>
+      <StyledTd className="has-text">
+        <span>{country.name}</span>
+      </StyledTd>
+      <StyledTd className="has-text">
+        <span>{country.capital}</span>
+      </StyledTd>
+      <StyledTd className="has-text">
+        <span>{country.region}</span>
+      </StyledTd>
+      <StyledTd className="has-text">
+        <span>{country.callingCodes.join(', ')}</span>
+      </StyledTd>
+      <StyledTd>
+        <button onClick={onRemove}>
+          <i className={classnames('material-icons', 'md-24', 'md-dark')}>
+            delete
+          </i>
+        </button>
+      </StyledTd>
     </tr>
   );
 };

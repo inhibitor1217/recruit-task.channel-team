@@ -13,6 +13,25 @@ const FlexContainer = styled.div`
   height: 100%;
 `;
 
+const StyledHeader = styled.header`
+  background-color: #212121;
+  padding: 16px 20px;
+
+  h1 {
+    color: #ffffff;
+    font-weight: normal;
+  }
+`;
+
+const StyledFooter = styled.footer`
+  background-color: #121212;
+  padding: 16px 20px;
+
+  span {
+    color: #9c9c9c;
+  }
+`;
+
 const HomePage: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -22,13 +41,19 @@ const HomePage: React.FC = () => {
 
   return (
     <FlexContainer>
-      <h2>List of countries</h2>
+      <StyledHeader>
+        <h1>List of Countries</h1>
+      </StyledHeader>
       <div>
         <KeywordInput />
         <ActionGroup />
       </div>
       <Table />
-      <h5>Created by 황동욱, inhibitor [inhibitor@kaist.ac.kr]</h5>
+      <StyledFooter>
+        <span>
+          Created by 황동욱, inhibitor [inhibitor@kaist.ac.kr] (2021.01.16)
+        </span>
+      </StyledFooter>
     </FlexContainer>
   );
 };

@@ -4,11 +4,36 @@ import styled from 'styled-components';
 import { TableHeader, TableRow } from '.';
 import { RootState } from '../../store/modules';
 import { sortedCountries } from '../../store/selectors';
+import { CONTENT_WIDTH } from '../../utils/const';
 import { AddCountryForm } from '../interactions';
 
 const ScrollContainer = styled.div`
   overflow-y: auto;
   flex: 1;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  margin: 20px 0;
+`;
+
+const StyledTable = styled.table`
+  width: ${CONTENT_WIDTH}px;
+
+  border-collapse: collapse;
+
+  tr {
+    background-color: #ffffff;
+  }
+  tr:nth-child(2n) {
+    background-color: #f5f5f5;
+  }
+
+  td.has-text {
+    min-width: 120px;
+    padding: 4px 8px;
+  }
 `;
 
 const Table: React.FC = () => {
@@ -18,7 +43,7 @@ const Table: React.FC = () => {
   return (
     <ScrollContainer>
       {isAdding && <AddCountryForm />}
-      <table>
+      <StyledTable>
         <tbody>
           <TableHeader />
           {countries &&
@@ -26,7 +51,7 @@ const Table: React.FC = () => {
               <TableRow key={item.id} id={item.id} country={item.country} />
             ))}
         </tbody>
-      </table>
+      </StyledTable>
     </ScrollContainer>
   );
 };
