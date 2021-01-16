@@ -6,6 +6,7 @@ import { sortedCountries } from '../../store/selectors';
 
 const ScrollContainer = styled.div`
   overflow-y: auto;
+  flex: 1;
 `;
 
 const Table: React.FC = () => {
