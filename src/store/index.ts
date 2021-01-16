@@ -1,7 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-
 import modules from './modules';
 
 const enhancer =
@@ -10,4 +9,5 @@ const enhancer =
     : composeWithDevTools(applyMiddleware(thunk));
 const store = createStore(modules, enhancer);
 
+export { actions } from './modules';
 export default store;

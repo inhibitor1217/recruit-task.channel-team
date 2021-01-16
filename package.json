@@ -10,6 +10,7 @@
     "lint": "npx eslint ./src"
   },
   "dependencies": {
+    "immer": "^8.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hot-loader": "^4.13.0",
