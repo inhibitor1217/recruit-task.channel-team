@@ -165,7 +165,7 @@ export const reducer = (
       });
     case ADD_TOGGLE:
       return produce(state, (draft) => {
-        if (!draft.add && draft.pending) {
+        if (draft.pending) {
           /* cannot start adding country when pending */
           return;
         }

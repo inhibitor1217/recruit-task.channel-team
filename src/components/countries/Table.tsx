@@ -8,12 +8,14 @@ import { CONTENT_WIDTH } from '../../utils/const';
 import { AddCountryForm } from '../interactions';
 
 const ScrollContainer = styled.div`
+  width: 100%;
+
   overflow-y: auto;
   flex: 1;
 
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 
   margin: 20px 0;
 `;
@@ -36,6 +38,17 @@ const StyledTable = styled.table`
   }
 `;
 
+const StyledLoadingIndicator = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  width: ${CONTENT_WIDTH}px;
+  flex: 1;
+  background-color: #f5f5f5;
+`;
+
 const Table: React.FC = () => {
   const countries = useSelector(sortedCountries);
   const isAdding = useSelector((state: RootState) => state.countries.add);
@@ -52,6 +65,11 @@ const Table: React.FC = () => {
             ))}
         </tbody>
       </StyledTable>
+      {!countries && (
+        <StyledLoadingIndicator>
+          <span>Loading ...</span>
+        </StyledLoadingIndicator>
+      )}
     </ScrollContainer>
   );
 };
