@@ -44,7 +44,7 @@ const loadThunk = (): ThunkAction<
 type CountriesState = {
   pending: boolean;
   error?: Error;
-  countries?: Country[];
+  list?: Country[];
 };
 
 const initialState: CountriesState = {
@@ -67,7 +67,7 @@ export const reducer = (
     case LOAD_SUCCESS:
       return produce(state, (draft) => {
         draft.pending = false;
-        draft.countries = action.countries;
+        draft.list = action.countries;
       });
     case LOAD_ERROR:
       return produce(state, (draft) => {
