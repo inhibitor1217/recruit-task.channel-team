@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "files": ["src/@types/index.d.ts"],
+  "compilerOptions": {
+    "module": "es6",
+    "moduleResolution": "node",
+    "target": "es5",
+    "jsx": "react"
+  }
+}
