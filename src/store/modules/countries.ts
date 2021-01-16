@@ -3,6 +3,7 @@ import { ThunkAction } from 'redux-thunk';
 import * as uuid from 'uuid';
 import { RootState } from '.';
 import datasource from '../../datasource';
+import { isValidCountry } from '../../utils';
 
 export enum CountriesOrderBy {
   code,
@@ -23,6 +24,8 @@ const LOAD_ERROR = 'countries/load.error' as const;
 const ORDER_BY = 'countries/order_by' as const;
 const SET_KEYWORD = 'countries/set_keyword' as const;
 const REMOVE = 'countries/remove' as const;
+const ADD_TOGGLE = 'countries/add.toggle' as const;
+const ADD_CONFIRM = 'countries/add.confirm' as const;
 
 const load = () => ({ type: LOAD_INVOKE });
 const loadSuccess = (countries: Country[]) => ({
@@ -46,6 +49,15 @@ const remove = (id: string): { type: 'countries/remove'; id: string } => ({
   type: REMOVE,
   id,
 });
+const addToggle = (): { type: 'countries/add.toggle' } => ({
+  type: ADD_TOGGLE,
+});
+const addConfirm = (
+  country: Country
+): { type: 'countries/add.confirm'; value: Country } => ({
+  type: ADD_CONFIRM,
+  value: country,
+});
 
 type CountriesActions =
   | ReturnType<typeof load>
@@ -53,7 +65,9 @@ type CountriesActions =
   | ReturnType<typeof loadError>
   | ReturnType<typeof orderBy>
   | ReturnType<typeof setKeyword>
-  | ReturnType<typeof remove>;
+  | ReturnType<typeof remove>
+  | ReturnType<typeof addToggle>
+  | ReturnType<typeof addConfirm>;
 
 const loadThunk = (): ThunkAction<
   Promise<void>,
@@ -84,6 +98,7 @@ type CountriesState = {
   orderBy: CountriesOrderBy;
   order: CountriesOrder;
   keyword: string;
+  add: boolean;
 };
 
 const initialState: CountriesState = {
@@ -91,6 +106,7 @@ const initialState: CountriesState = {
   orderBy: CountriesOrderBy.code,
   order: CountriesOrder.ascending,
   keyword: '',
+  add: false,
 };
 
 export const actions = {
@@ -98,6 +114,8 @@ export const actions = {
   orderBy,
   setKeyword,
   remove,
+  addToggle,
+  addConfirm,
 };
 
 export const reducer = (
@@ -144,6 +162,26 @@ export const reducer = (
           draft.list?.findIndex(({ id }) => id === action.id),
           1
         );
+      });
+    case ADD_TOGGLE:
+      return produce(state, (draft) => {
+        if (!draft.add && draft.pending) {
+          /* cannot start adding country when pending */
+          return;
+        }
+        draft.add = !draft.add;
+      });
+    case ADD_CONFIRM:
+      return produce(state, (draft) => {
+        if (draft.pending || !draft.add || !draft.list) {
+          return;
+        }
+        if (!isValidCountry(action.value)) {
+          // eslint-disable-next-line no-console
+          console.warn(`tried to add invalid country form`, action.value);
+          return;
+        }
+        draft.list.push({ id: uuid.v4(), country: { ...action.value } });
       });
     default:
       return state;

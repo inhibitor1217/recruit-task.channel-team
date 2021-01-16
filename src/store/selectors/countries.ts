@@ -93,3 +93,14 @@ export const sortedCountries = createSelector<
     );
   }
 );
+
+export const canStartAddingCountry = createSelector<
+  RootState,
+  boolean,
+  boolean,
+  boolean
+>(
+  (state) => state.countries.pending,
+  (state) => state.countries.add,
+  (pending, add) => !pending && !add
+);
