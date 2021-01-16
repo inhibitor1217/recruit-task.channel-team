@@ -2,14 +2,14 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { TableHeader, TableRow } from '.';
-import { RootState } from '../../store/modules';
+import { sortedCountries } from '../../store/selectors';
 
 const ScrollContainer = styled.div`
   overflow-y: auto;
 `;
 
 const Table: React.FC = () => {
-  const countries = useSelector((state: RootState) => state.countries.list);
+  const countries = useSelector(sortedCountries);
 
   return (
     <ScrollContainer>
