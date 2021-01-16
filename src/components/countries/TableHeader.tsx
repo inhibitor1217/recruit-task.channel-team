@@ -75,6 +75,7 @@ const TableHeader: React.FC = () => {
           </StyledCell>
         );
       })}
+      <td />
     </tr>
   );
 };

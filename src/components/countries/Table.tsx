@@ -19,7 +19,7 @@ const Table: React.FC = () => {
           <TableHeader />
           {countries &&
             countries.map((item) => (
-              <TableRow key={item.id} country={item.country} />
+              <TableRow key={item.id} id={item.id} country={item.country} />
             ))}
         </tbody>
       </table>

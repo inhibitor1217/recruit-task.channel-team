@@ -22,6 +22,7 @@ const LOAD_SUCCESS = 'countries/load.success' as const;
 const LOAD_ERROR = 'countries/load.error' as const;
 const ORDER_BY = 'countries/order_by' as const;
 const SET_KEYWORD = 'countries/set_keyword' as const;
+const REMOVE = 'countries/remove' as const;
 
 const load = () => ({ type: LOAD_INVOKE });
 const loadSuccess = (countries: Country[]) => ({
@@ -41,13 +42,18 @@ const setKeyword = (
   type: SET_KEYWORD,
   value,
 });
+const remove = (id: string): { type: 'countries/remove'; id: string } => ({
+  type: REMOVE,
+  id,
+});
 
 type CountriesActions =
   | ReturnType<typeof load>
   | ReturnType<typeof loadSuccess>
   | ReturnType<typeof loadError>
   | ReturnType<typeof orderBy>
-  | ReturnType<typeof setKeyword>;
+  | ReturnType<typeof setKeyword>
+  | ReturnType<typeof remove>;
 
 const loadThunk = (): ThunkAction<
   Promise<void>,
@@ -91,6 +97,7 @@ export const actions = {
   load: loadThunk,
   orderBy,
   setKeyword,
+  remove,
 };
 
 export const reducer = (
@@ -130,6 +137,13 @@ export const reducer = (
     case SET_KEYWORD:
       return produce(state, (draft) => {
         draft.keyword = action.value;
+      });
+    case REMOVE:
+      return produce(state, (draft) => {
+        draft.list?.splice(
+          draft.list?.findIndex(({ id }) => id === action.id),
+          1
+        );
       });
     default:
       return state;
