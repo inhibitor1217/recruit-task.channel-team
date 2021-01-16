@@ -1,4 +1,6 @@
 {
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules/**/*", "build/**/*"],
   "extends": "@tsconfig/recommended/tsconfig.json",
   "files": ["src/@types/index.d.ts"],
   "compilerOptions": {
