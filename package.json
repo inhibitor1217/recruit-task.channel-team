@@ -1,0 +1,7 @@
+{
+  "name": "recruit-task.channel-team",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:inhibitor1217/recruit-task.channel-team.git",
+  "author": "inhibitor <inhibitor@kaist.ac.kr>"
+}
