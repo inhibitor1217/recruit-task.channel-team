@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { actions } from '../../store';
 import { Table } from '../countries';
-import { KeywordInput } from '../search';
+import { KeywordInput } from '../interactions';
 
 const FlexContainer = styled.div`
   display: flex;
