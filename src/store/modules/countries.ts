@@ -1,5 +1,6 @@
 import produce from 'immer';
 import { ThunkAction } from 'redux-thunk';
+import * as uuid from 'uuid';
 import { RootState } from '.';
 import datasource from '../../datasource';
 
@@ -44,7 +45,7 @@ const loadThunk = (): ThunkAction<
 type CountriesState = {
   pending: boolean;
   error?: Error;
-  list?: Country[];
+  list?: { id: string; country: Country }[];
 };
 
 const initialState: CountriesState = {
@@ -67,7 +68,10 @@ export const reducer = (
     case LOAD_SUCCESS:
       return produce(state, (draft) => {
         draft.pending = false;
-        draft.list = action.countries;
+        draft.list = action.countries.map((country) => ({
+          id: uuid.v4(),
+          country,
+        }));
       });
     case LOAD_ERROR:
       return produce(state, (draft) => {

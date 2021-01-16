@@ -1,10 +1,19 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { actions } from '../../store';
+import { Table } from '../countries';
 
 const HomePage: React.FC = () => {
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(actions.countries.load());
+  }, []);
+
   return (
-    <div>
-      <h1>Hello, world!</h1>
-    </div>
+    <React.Fragment>
+      <Table />
+    </React.Fragment>
   );
 };
 
