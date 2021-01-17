@@ -41,9 +41,7 @@ const orderBy = (value: CountriesOrderBy) => ({
   type: ORDER_BY,
   value,
 });
-const setKeyword = (
-  value: string
-): { type: 'countries/set_keyword'; value: string } => ({
+const setKeyword = (value: string) => ({
   type: SET_KEYWORD,
   value,
 });
@@ -127,6 +125,15 @@ const orderByThunk = (
   };
 };
 
+const setKeywordThunk = (
+  value: string
+): ThunkAction<void, RootState, null, CountriesActions> => {
+  return (dispatch) => {
+    dispatch(setKeyword(value));
+    dispatch(initializeCursorThunk());
+  };
+};
+
 const removeThunk = (
   idToRemove: string
 ): ThunkAction<void, RootState, null, CountriesActions> => {
@@ -194,7 +201,7 @@ const initialState: CountriesState = {
 export const actions = {
   load: loadThunk,
   orderBy: orderByThunk,
-  setKeyword,
+  setKeyword: setKeywordThunk,
   remove: removeThunk,
   addToggle,
   addConfirm,
