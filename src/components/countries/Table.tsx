@@ -74,12 +74,17 @@ const Table: React.FC = () => {
   const dispatch = useDispatch();
 
   const countries = useSelector(paginatedCountries);
-  const isEmpty = useSelector(sortedCountries)?.length === 0;
+
+  const count = useSelector(sortedCountries)?.length;
   const isAdding = useSelector((state: RootState) => state.countries.add);
 
   const [scrollContainerRef, onScroll] = useCallbackOnScrollEnd<HTMLDivElement>(
     () => dispatch(actions.countries.fetchMore())
   );
+
+  React.useEffect(() => {
+    onScroll();
+  }, [count]);
 
   return (
     <ScrollContainer ref={scrollContainerRef} onScroll={onScroll}>
@@ -103,7 +108,7 @@ const Table: React.FC = () => {
           <span>Loading ...</span>
         </StyledLoadingIndicator>
       )}
-      {countries && isEmpty && (
+      {countries && count === 0 && (
         <StyledFullRow>
           <span>검색 결과가 없습니다.</span>
         </StyledFullRow>

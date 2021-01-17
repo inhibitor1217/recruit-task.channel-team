@@ -174,7 +174,7 @@ const fetchMoreThunk = (): ThunkAction<
       ({ id }) => id === state.countries.cursor
     );
     const nextCursor =
-      list[Math.min(indexOfCursor + PAGINATION, list.length - 1)].id;
+      list[Math.min(indexOfCursor + PAGINATION, list.length - 1)]?.id;
     dispatch(setCursor(nextCursor));
   };
 };

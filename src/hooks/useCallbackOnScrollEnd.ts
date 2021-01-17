@@ -26,7 +26,11 @@ const useCallbackOnScrollEnd = <T extends HTMLElement>(
   }, [callback]);
 
   React.useLayoutEffect(() => {
-    if (width && left && direction === 'horizontal') {
+    if (
+      width !== undefined &&
+      left !== undefined &&
+      direction === 'horizontal'
+    ) {
       if (left + scrollThreshold > width) {
         fireAction();
       }
@@ -34,7 +38,7 @@ const useCallbackOnScrollEnd = <T extends HTMLElement>(
   }, [fireAction, width, left, scrollThreshold, direction]);
 
   React.useLayoutEffect(() => {
-    if (height && top && direction === 'vertical') {
+    if (height !== undefined && top !== undefined && direction === 'vertical') {
       if (top + scrollThreshold > height) {
         fireAction();
       }
