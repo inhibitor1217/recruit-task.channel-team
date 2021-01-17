@@ -67,7 +67,8 @@ const HomePage: React.FC = () => {
       <Table />
       <StyledFooter>
         <span>
-          Created by 황동욱, inhibitor [inhibitor@kaist.ac.kr] (2021.01.16)
+          Created by 황동욱, inhibitor [inhibitor@kaist.ac.kr] (2021.01.16 -
+          2021.01.17)
         </span>
       </StyledFooter>
     </FlexContainer>
