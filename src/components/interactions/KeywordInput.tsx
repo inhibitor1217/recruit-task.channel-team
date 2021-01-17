@@ -53,9 +53,17 @@ const StyledButton = styled.button`
 const KeywordInput: React.FC = () => {
   const dispatch = useDispatch();
   const [keyword, setKeyword] = React.useState<string>('');
+  const debounceRef = React.useRef<NodeJS.Timeout>();
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
+
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = setTimeout(() => {
+      dispatch(actions.countries.setKeyword(e.target.value));
+    }, 500);
   };
 
   const commitKeyword = (e: React.FormEvent<HTMLFormElement>) => {
