@@ -93,3 +93,25 @@ export const sortedCountries = createSelector<
     );
   }
 );
+
+export const paginatedCountries = createSelector<
+  RootState,
+  CountryItem[] | undefined,
+  string | undefined,
+  CountryItem[] | undefined
+>(
+  sortedCountries,
+  (state) => state.countries.cursor,
+  (list, cursor) => {
+    if (!list) {
+      return list;
+    }
+
+    if (!cursor) {
+      return [];
+    }
+
+    const indexOfCursor = list.findIndex(({ id }) => id === cursor);
+    return list.slice(0, indexOfCursor + 1);
+  }
+);

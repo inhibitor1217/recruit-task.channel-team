@@ -4,6 +4,7 @@ import * as uuid from 'uuid';
 import { RootState } from '.';
 import datasource from '../../datasource';
 import { isValidCountry } from '../../utils';
+import { sortedCountries } from '../selectors';
 
 export enum CountriesOrderBy {
   code,
@@ -26,6 +27,7 @@ const SET_KEYWORD = 'countries/set_keyword' as const;
 const REMOVE = 'countries/remove' as const;
 const ADD_TOGGLE = 'countries/add.toggle' as const;
 const ADD_CONFIRM = 'countries/add.confirm' as const;
+const SET_CURSOR = 'countries/set_cursor' as const;
 
 const load = () => ({ type: LOAD_INVOKE });
 const loadSuccess = (countries: Country[]) => ({
@@ -33,9 +35,7 @@ const loadSuccess = (countries: Country[]) => ({
   countries,
 });
 const loadError = (error: Error) => ({ type: LOAD_ERROR, error });
-const orderBy = (
-  value: CountriesOrderBy
-): { type: 'countries/order_by'; value: CountriesOrderBy } => ({
+const orderBy = (value: CountriesOrderBy) => ({
   type: ORDER_BY,
   value,
 });
@@ -45,7 +45,7 @@ const setKeyword = (
   type: SET_KEYWORD,
   value,
 });
-const remove = (id: string): { type: 'countries/remove'; id: string } => ({
+const remove = (id: string) => ({
   type: REMOVE,
   id,
 });
@@ -58,6 +58,12 @@ const addConfirm = (
   type: ADD_CONFIRM,
   value: country,
 });
+const setCursor = (
+  cursor: string | undefined
+): { type: 'countries/set_cursor'; cursor: string | undefined } => ({
+  type: SET_CURSOR,
+  cursor,
+});
 
 type CountriesActions =
   | ReturnType<typeof load>
@@ -67,7 +73,8 @@ type CountriesActions =
   | ReturnType<typeof setKeyword>
   | ReturnType<typeof remove>
   | ReturnType<typeof addToggle>
-  | ReturnType<typeof addConfirm>;
+  | ReturnType<typeof addConfirm>
+  | ReturnType<typeof setCursor>;
 
 const loadThunk = (): ThunkAction<
   Promise<void>,
@@ -85,9 +92,63 @@ const loadThunk = (): ThunkAction<
       dispatch(load());
       const countries = await datasource.countries().get();
       dispatch(loadSuccess(countries));
+      dispatch(setCursor(undefined));
     } catch (e) {
       dispatch(loadError(e));
     }
+  };
+};
+
+const orderByThunk = (
+  value: CountriesOrderBy
+): ThunkAction<void, RootState, null, CountriesActions> => {
+  return (dispatch) => {
+    dispatch(orderBy(value));
+    dispatch(setCursor(undefined));
+  };
+};
+
+const removeThunk = (
+  idToRemove: string
+): ThunkAction<void, RootState, null, CountriesActions> => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const list = sortedCountries(state);
+    if (!list) {
+      return;
+    }
+
+    if (idToRemove === state.countries.cursor) {
+      const indexOfCursor = list.findIndex(
+        ({ id }) => id === state.countries.cursor
+      );
+      const newCursor =
+        indexOfCursor > 0 ? list[indexOfCursor - 1].id : undefined;
+      dispatch(setCursor(newCursor));
+    }
+
+    dispatch(remove(idToRemove));
+  };
+};
+
+const fetchMoreThunk = (): ThunkAction<
+  void,
+  RootState,
+  null,
+  CountriesActions
+> => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const list = sortedCountries(state);
+    if (!list) {
+      return;
+    }
+
+    const indexOfCursor = list.findIndex(
+      ({ id }) => id === state.countries.cursor
+    );
+    const nextCursor = list[Math.min(indexOfCursor + 10, list.length - 1)].id;
+    dispatch(setCursor(nextCursor));
   };
 };
 
@@ -95,6 +156,7 @@ type CountriesState = {
   pending: boolean;
   error?: Error;
   list?: { id: string; country: Country }[];
+  cursor?: string;
   orderBy: CountriesOrderBy;
   order: CountriesOrder;
   keyword: string;
@@ -111,11 +173,12 @@ const initialState: CountriesState = {
 
 export const actions = {
   load: loadThunk,
-  orderBy,
+  orderBy: orderByThunk,
   setKeyword,
-  remove,
+  remove: removeThunk,
   addToggle,
   addConfirm,
+  fetchMore: fetchMoreThunk,
 };
 
 export const reducer = (
@@ -182,6 +245,10 @@ export const reducer = (
           return;
         }
         draft.list.push({ id: uuid.v4(), country: { ...action.value } });
+      });
+    case SET_CURSOR:
+      return produce(state, (draft) => {
+        draft.cursor = action.cursor;
       });
     default:
       return state;
