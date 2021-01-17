@@ -1,8 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { TableHeader, TableRow } from '.';
-import { RootState } from '../../store/modules';
+import { useCallbackOnScrollEnd } from '../../hooks';
+import { actions, RootState } from '../../store/modules';
 import { sortedCountries } from '../../store/selectors';
 import { paginatedCountries } from '../../store/selectors/countries';
 import { CONTENT_WIDTH } from '../../utils/const';
@@ -70,11 +71,18 @@ const StyledFullRow = styled.div`
 `;
 
 const Table: React.FC = () => {
+  const dispatch = useDispatch();
+
   const countries = useSelector(paginatedCountries);
   const isEmpty = useSelector(sortedCountries)?.length === 0;
   const isAdding = useSelector((state: RootState) => state.countries.add);
+
+  const [scrollContainerRef, onScroll] = useCallbackOnScrollEnd<HTMLDivElement>(
+    () => dispatch(actions.countries.fetchMore())
+  );
+
   return (
-    <ScrollContainer>
+    <ScrollContainer ref={scrollContainerRef} onScroll={onScroll}>
       {isAdding && <AddCountryForm />}
       <StyledTable>
         <tbody>

@@ -29,6 +29,8 @@ const ADD_TOGGLE = 'countries/add.toggle' as const;
 const ADD_CONFIRM = 'countries/add.confirm' as const;
 const SET_CURSOR = 'countries/set_cursor' as const;
 
+const PAGINATION = 30;
+
 const load = () => ({ type: LOAD_INVOKE });
 const loadSuccess = (countries: Country[]) => ({
   type: LOAD_SUCCESS,
@@ -76,6 +78,23 @@ type CountriesActions =
   | ReturnType<typeof addConfirm>
   | ReturnType<typeof setCursor>;
 
+const initializeCursorThunk = (): ThunkAction<
+  void,
+  RootState,
+  null,
+  CountriesActions
+> => {
+  return (dispatch, getState) => {
+    const list = sortedCountries(getState());
+    if (!list) {
+      return;
+    }
+
+    const cursor = list[Math.min(PAGINATION, list.length) - 1].id;
+    dispatch(setCursor(cursor));
+  };
+};
+
 const loadThunk = (): ThunkAction<
   Promise<void>,
   RootState,
@@ -92,7 +111,7 @@ const loadThunk = (): ThunkAction<
       dispatch(load());
       const countries = await datasource.countries().get();
       dispatch(loadSuccess(countries));
-      dispatch(setCursor(undefined));
+      dispatch(initializeCursorThunk());
     } catch (e) {
       dispatch(loadError(e));
     }
@@ -104,7 +123,7 @@ const orderByThunk = (
 ): ThunkAction<void, RootState, null, CountriesActions> => {
   return (dispatch) => {
     dispatch(orderBy(value));
-    dispatch(setCursor(undefined));
+    dispatch(initializeCursorThunk());
   };
 };
 
@@ -147,7 +166,8 @@ const fetchMoreThunk = (): ThunkAction<
     const indexOfCursor = list.findIndex(
       ({ id }) => id === state.countries.cursor
     );
-    const nextCursor = list[Math.min(indexOfCursor + 10, list.length - 1)].id;
+    const nextCursor =
+      list[Math.min(indexOfCursor + PAGINATION, list.length - 1)].id;
     dispatch(setCursor(nextCursor));
   };
 };
