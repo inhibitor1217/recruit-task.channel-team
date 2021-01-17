@@ -50,6 +50,16 @@ const StyledLoadingIndicator = styled.div`
   background-color: #f5f5f5;
 `;
 
+const StyledEmptyList = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  width: ${CONTENT_WIDTH}px;
+  height: 120px;
+`;
+
 const Table: React.FC = () => {
   const countries = useSelector(sortedCountries);
   const isAdding = useSelector((state: RootState) => state.countries.add);
@@ -70,6 +80,11 @@ const Table: React.FC = () => {
         <StyledLoadingIndicator>
           <span>Loading ...</span>
         </StyledLoadingIndicator>
+      )}
+      {countries && countries.length === 0 && (
+        <StyledEmptyList>
+          <span>검색 결과가 없습니다.</span>
+        </StyledEmptyList>
       )}
     </ScrollContainer>
   );
