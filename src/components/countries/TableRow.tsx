@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { actions } from '../../store';
 
 interface TableRowProps {
+  index: number;
   id: string;
   country: Country;
 }
@@ -33,13 +34,16 @@ const StyledTd = styled.td`
   }
 `;
 
-const TableRow: React.FC<TableRowProps> = ({ id, country }) => {
+const TableRow: React.FC<TableRowProps> = ({ id, country, index }) => {
   const dispatch = useDispatch();
 
   const onRemove = () => dispatch(actions.countries.remove(id));
 
   return (
     <tr>
+      <StyledTd>
+        <span style={{ color: '#888888' }}>{index + 1}</span>
+      </StyledTd>
       <StyledTd className="has-text">
         <span>{country.alpha2Code}</span>
       </StyledTd>

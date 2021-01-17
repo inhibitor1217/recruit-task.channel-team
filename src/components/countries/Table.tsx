@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { TableHeader, TableRow } from '.';
 import { RootState } from '../../store/modules';
 import { sortedCountries } from '../../store/selectors';
+import { paginatedCountries } from '../../store/selectors/countries';
 import { CONTENT_WIDTH } from '../../utils/const';
 import { AddCountryForm } from '../interactions';
 
@@ -33,9 +34,11 @@ const StyledTable = styled.table`
     background-color: #f5f5f5;
   }
 
+  td {
+    padding: 4px 8px;
+  }
   td.has-text {
     min-width: 120px;
-    padding: 4px 8px;
   }
 `;
 
@@ -50,7 +53,7 @@ const StyledLoadingIndicator = styled.div`
   background-color: #f5f5f5;
 `;
 
-const StyledEmptyList = styled.div`
+const StyledFullRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -58,12 +61,18 @@ const StyledEmptyList = styled.div`
 
   width: ${CONTENT_WIDTH}px;
   height: 120px;
+
+  span.link {
+    color: #2196f3;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 `;
 
 const Table: React.FC = () => {
-  const countries = useSelector(sortedCountries);
+  const countries = useSelector(paginatedCountries);
+  const isEmpty = useSelector(sortedCountries)?.length === 0;
   const isAdding = useSelector((state: RootState) => state.countries.add);
-
   return (
     <ScrollContainer>
       {isAdding && <AddCountryForm />}
@@ -71,8 +80,13 @@ const Table: React.FC = () => {
         <tbody>
           <TableHeader />
           {countries &&
-            countries.map((item) => (
-              <TableRow key={item.id} id={item.id} country={item.country} />
+            countries.map((item, index) => (
+              <TableRow
+                key={item.id}
+                id={item.id}
+                country={item.country}
+                index={index}
+              />
             ))}
         </tbody>
       </StyledTable>
@@ -81,10 +95,10 @@ const Table: React.FC = () => {
           <span>Loading ...</span>
         </StyledLoadingIndicator>
       )}
-      {countries && countries.length === 0 && (
-        <StyledEmptyList>
+      {countries && isEmpty && (
+        <StyledFullRow>
           <span>검색 결과가 없습니다.</span>
-        </StyledEmptyList>
+        </StyledFullRow>
       )}
     </ScrollContainer>
   );

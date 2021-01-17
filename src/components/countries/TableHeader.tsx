@@ -90,6 +90,7 @@ const TableHeader: React.FC = () => {
 
   return (
     <StyledTr>
+      <td />
       {columns.map(({ key, label, orderBy }) => {
         const isActive = activeOrderBy === orderBy;
         const order = isActive ? activeOrder : CountriesOrder.ascending;
