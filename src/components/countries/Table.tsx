@@ -8,6 +8,7 @@ import { CONTENT_WIDTH } from '../../utils/const';
 import { AddCountryForm } from '../interactions';
 
 const ScrollContainer = styled.div`
+  position: relative;
   width: 100%;
 
   overflow-y: auto;
