@@ -31,7 +31,7 @@ $ npx serve -s build/
 - `react@17` 버전에서 function component와 hook을 주력으로 개발했습니다. CRA를 사용하지 않고 webpack, webpack-dev-server, babel을 설정했습니다. (`webpack.config.js`, `.babelrc`) CRA로 프로젝트 하나 만든 뒤 eject해서 참고하긴 했습니다.
 - `react-hot-loader`를 넣어서 HMR이 적용됩니다.
 - Typescript도 적용했습니다. webpack에서 `ts-loader`로 번들링하고 babel에 관련된 preset과 plugin을 넣어주었습니다.
-- ESLinet와 Prettier를 적용했습니다.
+- ESLint와 Prettier를 적용했습니다.
 
 > - 버튼을 누르면 각 필드별 오름차순, 내림차순 정렬이 되어야 함.
 
@@ -117,7 +117,7 @@ type CountriesState = {
 
 - `redux-form` 패키지를 처음 써 보았습니다.
 - 국가 추가하는 form에 sync validation을 넣었습니다. 국가 코드와 이름이 필수값이며, 국가 전화번호는 콤마로 구분된 숫자 리스트가 되도록 했습니다.
-- `src/components/interactions/AddCountryForm.tsx`에 구현됭 있습니다.
+- `src/components/interactions/AddCountryForm.tsx`에 구현되어 있습니다.
 
 > - cross browsing 적용
 
